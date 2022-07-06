@@ -49,7 +49,7 @@
 # 14. Run SKAT-O
 
 # REQUIREMENTS
-# imiss-vs-het.Rscript
+# imiss-vs-het.Rscript 
 # lmiss-hist.Rscript
 # run-IBD-QC.pl
 # MahatPlot.Rscript
@@ -58,8 +58,8 @@
 # collapseGenes.Rscript
 # getSignificantResults.py
 # genomic-inflation-lambda-QQplot.r
-# run_SKAT.r
-# run_SKATX.r
+# run_SKAT_final.r
+# run_SKAT_finalX.r
 
 #############################################################################
 

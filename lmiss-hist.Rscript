@@ -1,0 +1,34 @@
+##############################################
+# FILTER SAMPLES: Call Rate miss genotype rate
+##############################################
+
+lmiss <- read.table("/home/thais/HelenaBIPMED/Rare/FlowFilter/helena.step3.Miss.lmiss",header=T)
+
+ylabels=c("0","20K","40K","60K","80K","100K")
+xlabels=c("0.0001","0.001","0.01","0.1","1")
+#par(mfrow=c(1,1))
+
+pdf("miss/helenaRare_lmiss.pdf")
+
+q <- na.omit(lmiss$F_MISS)
+hist(log10(q),axes=F,xlim=c(-4,0),col="BLUE",ylab="Number of SNPs",xlab="FMISS",main="All SNPs",ylim=c(0,100000))
+axis(side=2,labels=F)
+mtext(ylabels,side=2,las=2, at=c(0,20000,40000,60000,80000,100000),line=1)
+axis(side=1,labels=F)
+mtext(xlabels,side=1,at=c(-4,-3,-2,-1,0),line=1)
+
+## Drow the vertical line indicating the cut off threshold
+abline(v=log10(0.005),lty=2, col="BLUE")
+abline(v=log10(0.2),lty=2, col="RED")
+
+## Set the cutoff threshold
+lmiss.index = lmiss$F_MISS >= 0.2
+
+## Only need to extract the first 2 elements
+lmiss = lmiss[lmiss.index, c(1:2)]
+
+## Export out to a file; 'fail-lmiss-qc.txt' for later removal
+write.table(lmiss, file = "Exclude_Genotypes_Miss.txt", row.names = F, col.names = F, 
+    quote = F, sep = "\t")
+
+

@@ -1,0 +1,88 @@
+#----------------------------------
+#     PCA 2D & 3D
+#----------------------------------
+pacotes <- c("rgl", "scales", "pca3d", "RColorBrewer", "stats", 
+             "epicontacts", "hierfstat", "dplyr")
+
+if(sum(as.numeric(!pacotes %in% installed.packages())) != 0){
+  instalador <- pacotes[!pacotes %in% installed.packages()]
+  for(i in 1:length(instalador)) {
+    install.packages(instalador, dependencies = T)
+    break()}
+  sapply(pacotes, require, character = T) 
+} else {
+  sapply(pacotes, require, character = T) 
+}
+
+#Your home directory where the files pf PCA are in
+#setwd("~/Desktop/PostDoc/PROJETOS/PROJ_Genomas_RNAseq_Estela/Results/PCA/Wo_Out/")
+
+# INPUT
+
+pca_val<- read.table("helenaX.step8.eigenval",header=F) #eigenvalues
+pca <- read.table("helenaX.step8.eigenvec",header=F) #eigenvectors
+
+# Ading Coontrol and Case statments
+pca<-pca[,1:5]
+colnames(pca)<-c("sample_id", "sample_id", "PC1", "PC2", "PC3")
+pca[,'Region']<-ifelse(grepl('^BIPMED', pca$sample_id), 'Control', 'Case')
+
+# Calculate PC eigenvalues proportions
+x = nrow(pca) #total number of samples in the dataset
+pca_val<-data.frame(eingenvalue=pca_val$V1,variation=round((pca_val$V1/x)*100,digits = 1))
+p1<-pca_val[1,2]
+p2<-pca_val[2,2]
+p3<-pca_val[3,2]
+
+ncol(pca)
+
+
+############## Plot 3D
+size <- c(10,10) #Number of populations
+
+irisList <- list(pca[pca$Region=="Case",],
+                 pca[pca$Region=="Control",])
+
+color <- c("#0018F9", #Case - Blue
+           "red") # Control
+
+with(pca, plot3d(PC1, PC2, PC3,type="s", box=FALSE, size=0))
+
+# Use a separate call to points3d() to plot points of each size
+for(i in seq_along(irisList)) {
+  with(irisList[[i]], points3d(PC1,PC2, PC3, col=color[[i]], alpha=0.7,size=size[[i]]), shade=0.1)}
+
+snapshotPCA3d(file="PCA3D.png")
+
+# We can indicate the axis and the rotation velocity
+#play3d( spin3d( axis = c(0, 0, 1), rpm = 20), duration = 10 )
+
+# Save like gif
+movie3d(
+  movie="PCA3DAnimation", 
+  spin3d( axis = c(0, 0, 1), rpm = 7),
+  duration = 10, 
+  dir = "~/Desktop",
+  type = "gif", 
+  clean = TRUE)
+
+############## PCA 2D
+temp <- as.factor(pca$Region)
+
+myCol <- transp(c("#0018F9", # Case
+                  "red"), # Control:
+                .7)[temp]
+
+pdf("Plot2D.pdf", width = 7, height = 4) 
+par(mfrow=c(1,3))
+plot(pca$PC1,pca$PC2, col=myCol, cex=1, pch=16, main="PC1 x PC2", xlab="PC1 (1.4%)", ylab="PC2 (1.4%)") #PC1 X PC2
+plot(pca$PC1,pca$PC3, col=myCol, cex=1, pch=16, main="PC1 x PC3", xlab="PC1 (0.6%)", ylab="PC3 (0.6%)") #PC1 X PC3
+plot(pca$PC2,pca$PC3, col=myCol, cex=1, pch=16, main="PC2 x PC3", xlab="PC2 (0.6%)", ylab="PC3 (0.6%)") #PC2 X PC3
+dev.off()
+
+################################# Exclude samples
+
+# Filter by "eyes"
+pca1<-pca[pca$PC3>=0.6 | pca$PC3<=-0.6 | pca$PC1<=-0.25,]
+pca1<-pca1[1:2]
+write.table(pca1,file="ExcludeSamplesPCA.txt",quote=F, row.names = F)

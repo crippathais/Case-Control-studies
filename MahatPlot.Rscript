@@ -1,0 +1,57 @@
+library(qqman)
+#vignette("qqman")
+install.packages("manhattanly")
+library(manhattanly)
+
+logt <-read.table("/home/thais/HelenaBIPMED/Rare/FlowFilter/helena.step9.assoc.logistic", header = T)
+logt_a <-read.table("/home/thais/HelenaBIPMED/Rare/FlowFilter/helena.step9.assoc.logistic.adjusted", header = T)
+
+logt_ADD<-droplevels(subset(logt,logt$TEST %in% c("ADD")))
+manhattan(logt_ADD,logp = T,ylim=c(0,15))
+
+#manhattan plot
+pdf("Manhattan_1.pdf")
+manhattan(logt_ADD, main = "Manhattan Plot", 
+          ylim = c(0, 15), 
+          cex = 0.6,
+          col = c("#CC6633", "#099999"), 
+          suggestiveline = -log10(1e-05), 
+          genomewideline = -log10(5e-08),
+          logp = T)
+dev.off()
+
+signpvalue_Manh <- droplevels(subset(logt_ADD, -log10(logt_ADD$P)>=-log10(5e-08)))
+
+#qqplot
+pdf("QQPLOT.pdf")
+qq(logt_a$UNADJ, main = "QQ plot - LAMBDA 1.1543")
+# For p-values, calculate chi-squared statistic
+chisq <- qchisq(1-logt_a$UNADJ,1)
+#Calculate lambda gc (λgc)
+median(chisq)/qchisq(0.5,1)
+dev.off()
+
+#SNPs to be excluded need to be in the alternative hypothesis, or better, pvalue<0.05.
+signpvalue <- droplevels(subset(logt_a, logt_a$BONF<0.05))
+write.table(signpvalue,file="ExcludeSnpsQQplot.csv")
+a<-as.factor(signpvalue$SNP)
+
+logt_m<-logt_a[!logt_a$SNP==a,]
+logtm<-logt[!logt$SNP==a,]
+
+##### Repeat Manht & qqplot
+
+pdf("qqplot.pdf")
+#qqplot
+qq(logt_m$UNADJ, main = "QQ plot")
+# For p-values, calculate chi-squared statistic
+chisq <- qchisq(1-logt_m$UNADJ,1)
+#Calculate lambda gc (λgc)
+median(chisq)/qchisq(0.5,1)
+dev.off()
+
+pdf("Manhattan.pdf")
+#manhattan plot
+manhattan(logtm, main = "Manhattan Plot of Brazil", ylim = c(0, 15), cex = 0.6,
+          cex.axis = 0.9, col = c("blue4", "gray10"), suggestiveline = -log10(1e-05), genomewideline = -log10(5e-08))
+dev.off()
