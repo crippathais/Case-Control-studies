@@ -8,6 +8,13 @@ CaseControl_RareVar.sh
 
 ```bash
 CaseControl_CommonVar.sh
-
 ```
+
+Auxiliaries scripts:
+imiss-vs-het.Rscript
+lmiss-hist.Rscript
+run-IBD-QC.pl
+PCA.Rscript
+MahatPlot.Rscript
+
 
