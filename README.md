@@ -10,11 +10,17 @@ CaseControl_RareVar.sh
 CaseControl_CommonVar.sh
 ```
 
-Auxiliaries scripts:
-imiss-vs-het.Rscript
-lmiss-hist.Rscript
-run-IBD-QC.pl
-PCA.Rscript
-MahatPlot.Rscript
+Auxiliaries scripts (QC pre-processing):
+- imiss-vs-het.Rscript
+- lmiss-hist.Rscript
+- run-IBD-QC.pl
+- PCA.Rscript
+- MahatPlot.Rscript -- Plot of linear regressionand QQplot
+  
+Scripts (Analysis)
+- CollapseGenes.R -- if one or more genes are in the same SNP run this part.
+- run_SKAT_final.R and run_SKAT_finalX.R -- SKAT software ()
+- ped2scikitlearn.py 
+- getSignificantResults.py -- retrieve significant results from SKAT run.
 
 
