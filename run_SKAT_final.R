@@ -1,10 +1,8 @@
 #################################################
 # SKAT Analysis
-# Maira R. Rodrigues
-# Benilton Carvalho
-# Barbara Henning
+# Maira R. Rodrigues, Benilton Carvalho, Barbara Henning
 # LAB BIOEST. AND BIOCOMP. - IMECC - FCM -UNICAMP
-#
+# Updated by Thais Crippa
 # Last update: 10.08.2020
 #
 #################################################
