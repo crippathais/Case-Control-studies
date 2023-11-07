@@ -19,8 +19,9 @@ Auxiliaries scripts (QC pre-processing):
   
 Scripts (Analysis)
 - CollapseGenes.R -- if one or more genes are in the same SNP run this part.
-- run_SKAT_final.R and run_SKAT_finalX.R -- SKAT software ()
-- ped2scikitlearn.py 
+- run_SKAT_final.R and run_SKAT_finalX.R -- SKAT package in BioConductor
+- ped2scikitlearn.py  -- 
 - getSignificantResults.py -- retrieve significant results from SKAT run.
+- RandonForest_gene.sh and RandonForest_total.sh -- Randon forest test between groups
 
 
